@@ -55,6 +55,30 @@
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
+  function winners(){
+    var squares = {};
+    for (var i = 0; i < 9; i++){
+      squares[i] = $("#" + i.toString()).text()
+    }
+    if (squares[0] == "X" && squares[1] == "X" && squares[2] == "X") return "X";
+    if (squares[3] == "X" && squares[4] == "X" && squares[5] == "X") return "X";
+    if (squares[6] == "X" && squares[7] == "X" && squares[8] == "X") return "X";
+    if (squares[0] == "X" && squares[3] == "X" && squares[6] == "X") return "X";
+    if (squares[1] == "X" && squares[4] == "X" && squares[7] == "X") return "X";
+    if (squares[2] == "X" && squares[5] == "X" && squares[8] == "X") return "X";
+    if (squares[0] == "X" && squares[4] == "X" && squares[8] == "X") return "X";
+    if (squares[2] == "X" && squares[4] == "X" && squares[6] == "X") return "X";
+
+    if (squares[0] == "O" && squares[1] == "O" && squares[2] == "O") return "O";
+    if (squares[3] == "O" && squares[4] == "O" && squares[5] == "O") return "O";
+    if (squares[6] == "O" && squares[7] == "O" && squares[8] == "O") return "O";
+    if (squares[0] == "O" && squares[3] == "O" && squares[6] == "O") return "O";
+    if (squares[1] == "O" && squares[4] == "O" && squares[7] == "O") return "O";
+    if (squares[2] == "O" && squares[5] == "O" && squares[8] == "O") return "O";
+    if (squares[0] == "O" && squares[4] == "O" && squares[8] == "O") return "O";
+    if (squares[2] == "O" && squares[4] == "O" && squares[6] == "O") return "O";
+
+  }
   function findGetParameter(parameterName) {
       var result = null,
           tmp = [];
