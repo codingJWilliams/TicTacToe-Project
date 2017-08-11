@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/codingJWilliams/TicTacToe-Project/issues"
   },
-  "homepage": "https://github.com/codingJWilliams/TicTacToe-Project#readme"
+  "homepage": "https://github.com/codingJWilliams/TicTacToe-Project#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
 }
