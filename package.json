@@ -1,0 +1,19 @@
+{
+  "name": "tictactoe-online",
+  "version": "1.0.0",
+  "description": "A Node/Express app to play the popular game Tic Tac Toe with a friend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codingJWilliams/TicTacToe-Project.git"
+  },
+  "author": "Jay Williams",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codingJWilliams/TicTacToe-Project/issues"
+  },
+  "homepage": "https://github.com/codingJWilliams/TicTacToe-Project#readme"
+}
