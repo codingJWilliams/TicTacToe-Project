@@ -125,7 +125,6 @@
   })
   socket.on("player2-display-grid", function(params){
     $("#game").remove();
-    $("#turn").remove();
     $("table").fadeIn();
     $("#turn_thing").fadeIn();
     $("#turn_thing").text("Opponent's Turn");
@@ -133,7 +132,6 @@
   })
   socket.on("player1-display-grid", function(params){
     $("#game").remove();
-    $("#turn").remove();
     $("table").fadeIn();
     $("#turn_thing").fadeIn();
     $("#turn_thing").text("Your Turn");
@@ -146,18 +144,18 @@
       }
       $("#" + params.myGo).text("O");
       myTurn = true;
-      $("#turn").text("Your Turn");
+      $("#turn_thing").text("Your Turn");
       if (winners() !== false){
         var winner = winners();
         if(winner == "O") {
           $("table").fadeOut();
-          $("#turn").remove();
+          $("#turn_thing").remove();
           $("#win").text("You lose :-(!");
           $("#win").fadeIn();
           socket.disconnect()
         } else {
           $("table").fadeOut();
-          $("#turn").remove();
+          $("#turn_thing").remove();
           $("#win").text("You win!");
           $("#win").fadeIn();
           socket.disconnect()
