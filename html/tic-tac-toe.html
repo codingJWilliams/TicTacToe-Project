@@ -33,7 +33,7 @@
     </h5>
     <br><br><br>
     <kbd id="game" style="display:none;"> Joining game </kbd>
-    <kbd id="turn" style="display:none;"> Your turn </kbd>
+    <kbd id="turn_thing" style="display:none;"> Your turn </kbd>
     <h1>
       <kbd id="win" style="display:none"></kbd>
     </h1>
@@ -127,16 +127,16 @@
     $("#game").remove();
     $("#turn").remove();
     $("table").fadeIn();
-    $("#turn").fadeIn();
-    $("#turn").text("Opponent's Turn");
+    $("#turn_thing").fadeIn();
+    $("#turn_thing").text("Opponent's Turn");
     emitTo(store.other, "player1-display-grid", {})
   })
   socket.on("player1-display-grid", function(params){
     $("#game").remove();
     $("#turn").remove();
     $("table").fadeIn();
-    $("#turn").fadeIn();
-    $("#turn").text("Your Turn");
+    $("#turn_thing").fadeIn();
+    $("#turn_thing").text("Your Turn");
     myTurn = true;
   })
   socket.on("opponent-turn", function(params){
@@ -187,7 +187,7 @@
         }
       }
       myTurn = false;
-      $("#turn").text("Opponent's Turn");
+      $("#turn_thing").text("Opponent's Turn");
     }
   }
 
