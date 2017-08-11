@@ -34,6 +34,9 @@
     <br><br><br>
     <kbd id="game" style="display:none;"> Joining game </kbd>
     <kbd id="turn" style="display:none;"> Your turn </kbd>
+    <h1>
+      <kbd id="win" style="display:none"></kbd>
+    </h1>
     </center>
 <table style="margin-top: 5em; display:none">
   <tr>
@@ -77,7 +80,7 @@
     if (squares[2] == "O" && squares[5] == "O" && squares[8] == "O") return "O";
     if (squares[0] == "O" && squares[4] == "O" && squares[8] == "O") return "O";
     if (squares[2] == "O" && squares[4] == "O" && squares[6] == "O") return "O";
-
+    return false;
   }
   function findGetParameter(parameterName) {
       var result = null,
@@ -142,6 +145,20 @@
       $("#" + params.myGo).text("O");
       myTurn = true;
       $("#turn").text("Your Turn");
+      if (winners() !== false){
+        var winner = winners();
+        if(winner == "O") {
+          $("table").fadeOut();
+          $("#win").text("You lose :-(!");
+          $("#win").fadeIn();
+          socket.disconnect()
+        } else {
+          $("table").fadeOut();
+          $("#win").text("You win!");
+          $("#win").fadeIn();
+          socket.disconnect()
+        }
+      }
     } else {
       swal("Opponent is most likely using hacks", "they sent an invalid move", "error")
     }
@@ -151,6 +168,20 @@
       if ($("#" + square).text() != "") return null;
       $("#" + square).text("X");
       emitTo(store.other, "opponent-turn", {myGo: square})
+      if (winners() !== false){
+        var winner = winners();
+        if(winner == "X") {
+          $("table").fadeOut();
+          $("#win").text("You win!");
+          $("#win").fadeIn();
+          socket.disconnect()
+        } else {
+          $("table").fadeOut();
+          $("#win").text("You lose :-(!");
+          $("#win").fadeIn();
+          socket.disconnect()
+        }
+      }
       myTurn = false;
       $("#turn").text("Opponent's Turn");
     }
