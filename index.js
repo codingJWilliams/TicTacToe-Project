@@ -4,7 +4,8 @@ var config = require("./config.json");
 var io = require('socket.io')(http, {'pingInterval': 3000, 'pingTimeout': 3000});
 var rn = require('random-number');
 var mongo = new (require("mongo-sync").Server)(config.database.uri);
-
+var result = mongo.db("authentication").getCollection("users").find().toArray();
+console.log(result)
 app.get('/', function(req, res){
   res.sendFile(__dirname + config.file_locations.lobby);
 });
