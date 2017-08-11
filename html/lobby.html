@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.7/sweetalert2.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://bootswatch.com/cyborg/bootstrap.min.css" type="text/css">
   </head>
@@ -32,13 +32,15 @@
           <div class="col-xs-4"> </div>
         </div>
         <br>
-        <button class="btn btn-primary"> Battle with stranger </button> <button style="display: inline" class="btn btn-success"> Battle with friend </button> 
+        <button onclixk="randomBattle()" class="btn btn-primary"> Battle with stranger </button>
+        <button onclick="friendBattle()" style="display: inline" class="btn btn-success"> Battle with friend </button>
         </center>
       </div>
 
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.7/sweetalert2.min.js"></script>
     <script src="http://spin.js.org/spin.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
@@ -49,6 +51,24 @@
       function usernameKeyTyped() {
         var usernameText = $("#enter_username").val();
         console.log(usernameText)
+      }
+      function friendBattle() {
+        swal({
+          title: 'Host or Join?',
+          text: "If you want to start a game, press 'Host'. If your friend has given you a code like 'TTT-123ABC' then click 'Join'",
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#427df4',
+          cancelButtonColor: '#427df4',
+          confirmButtonText: 'Host',
+          cancelButtonText: "Join"
+        }).then(function () {
+          console.log("Host")
+        }, function (dismiss) {
+          if (dismiss === "cancel") {
+            console.log("Join")
+          }
+        })
       }
     </script>
   </body>
