@@ -1,9 +1,9 @@
-// Copyright Jay Williams
+/* Copyright Jay Williams */
 table {
-  margin-left:auto; 
-  margin-right:auto; 
-  width: 551px; 
-  -webkit-user-select: none; 
+  margin-left:auto;
+  margin-right:auto;
+  width: 551px;
+  -webkit-user-select: none;
 }
 td {
   height: 175px;
