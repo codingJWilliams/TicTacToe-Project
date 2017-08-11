@@ -124,7 +124,8 @@
     emitTo(store.other, "player2-display-grid", {});
   })
   socket.on("player2-display-grid", function(params){
-    $("#game").remove()
+    $("#game").remove();
+    $("#turn").remove();
     $("table").fadeIn();
     $("#turn").fadeIn();
     $("#turn").text("Opponent's Turn");
@@ -132,6 +133,7 @@
   })
   socket.on("player1-display-grid", function(params){
     $("#game").remove();
+    $("#turn").remove();
     $("table").fadeIn();
     $("#turn").fadeIn();
     $("#turn").text("Your Turn");
@@ -149,11 +151,13 @@
         var winner = winners();
         if(winner == "O") {
           $("table").fadeOut();
+          $("#turn").remove();
           $("#win").text("You lose :-(!");
           $("#win").fadeIn();
           socket.disconnect()
         } else {
           $("table").fadeOut();
+          $("#turn").remove();
           $("#win").text("You win!");
           $("#win").fadeIn();
           socket.disconnect()
