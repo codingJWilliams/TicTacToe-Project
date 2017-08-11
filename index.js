@@ -1,11 +1,11 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var config = require("config.json")
+var config = require("./config.json");
 
 app.get('/', function(req, res){
-  res.send('<h1>Hello world</h1>');
+  res.sendFile(__dirname + config.file_locations.index);
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(config.server.port, function(){
+  console.log('listening on *:' + config.server.port);
 });
