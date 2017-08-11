@@ -173,11 +173,13 @@
       if (winners() !== false){
         var winner = winners();
         if(winner == "X") {
+          $("#turn_thing").remove();
           $("table").fadeOut();
           $("#win").text("You win!");
           $("#win").fadeIn();
           socket.disconnect()
         } else {
+          $("#turn_thing").remove();
           $("table").fadeOut();
           $("#win").text("You lose :-(!");
           $("#win").fadeIn();
