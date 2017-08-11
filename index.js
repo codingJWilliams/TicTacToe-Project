@@ -11,6 +11,9 @@ app.get("/newgame/", function(req, res){
   console.log(req.query)
   res.redirect('/play/?game=' + generateGameCode() + "&nickname=" + req.query.nickname);
 })
+app.get('/play/', function(req, res){
+  res.sendFile(__dirname + config.file_locations.play_friend);
+});
 app.use('/static', require('express').static('static'))
 function generateGameCode(){ return "TTT-" + gRD() + gRD() + gRD() + gRA() + gRA() + gRA() }
 function gRD(){ return String(rn({min:0, max:9, integer: true})) }
