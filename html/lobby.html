@@ -18,20 +18,6 @@
           Made with ❤ by Jay Williams
         </h5>
         <br>
-        <h3>
-          Please enter a nickname:
-        </h3>
-        <div class="row">
-          <div class="col-xs-4"> </div>
-          <div class="col-xs-4">
-            <div class="input-group input-group-lg">
-              <span class="input-group-addon" id="sizing-addon1">></span>
-              <input type="text" id="enter_username" class="form-control" placeholder="Username" aria-label="Nickname" aria-describedby="sizing-addon1" onkeyup="usernameKeyTyped()">
-            </div>
-          </div>
-          <div class="col-xs-4"> </div>
-        </div>
-        <br>
         <button onclixk="randomBattle()" class="btn btn-primary"> Battle with stranger </button>
         <button onclick="friendBattle()" style="display: inline" class="btn btn-success"> Battle with friend </button>
         </center>
@@ -66,7 +52,27 @@
           window.location.href = "/newgame/?nickname=" + $("#enter_username").val()
         }, function (dismiss) {
           if (dismiss === "cancel") {
-            console.log("Join")
+            swal({
+              title: 'Please enter the game code (TTT-123XXX)',
+              input: 'email',
+              showCancelButton: true,
+              confirmButtonText: 'Join',
+              showLoaderOnConfirm: true,
+              preConfirm: function (email) {
+                return new Promise(function (resolve, reject) {
+                  setTimeout(function() {
+                    if (!email.startsWith("TTT-")) {
+                      reject("That's not a valid code")
+                    } else {
+                      resolve()
+                    }
+                  }, 400)
+                })
+              },
+              allowOutsideClick: false
+            }).then(function (email) {
+              window.location.href = "/play/?game=" + email
+            })
           }
         })
       }
