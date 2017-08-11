@@ -63,7 +63,7 @@
           confirmButtonText: 'Host',
           cancelButtonText: "Join"
         }).then(function () {
-          console.log("Host")
+          window.location.href = "/newgame/?nickname=" + $("#enter_username").val()
         }, function (dismiss) {
           if (dismiss === "cancel") {
             console.log("Join")
