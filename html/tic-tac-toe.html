@@ -33,24 +33,26 @@
     </h5>
     <br><br><br>
     <kbd id="game" style="display:none;"> Joining game </kbd>
+    <kbd id="turn" style="display:none;"> Your turn </kbd>
     </center>
 <table style="margin-top: 5em; display:none">
   <tr>
-    <td id="0">X</td>
-    <td id="1"></td>
-    <td id="2">O</td>
+    <td id="0" onclick="squareClicked('0')"></td>
+    <td id="1" onclick="squareClicked('1')"></td>
+    <td id="2" onclick="squareClicked('2')"></td>
   </tr>
   <tr>
-    <td id="3"></td>
-    <td id="4">X</td>
-    <td id="5">O</td>
+    <td id="3" onclick="squareClicked('3')"></td>
+    <td id="4" onclick="squareClicked('4')"></td>
+    <td id="5" onclick="squareClicked('5')"></td>
   </tr>
   <tr>
-    <td id="6"></td>
-    <td id="7"></td>
-    <td id="8">O</td>
+    <td id="6" onclick="squareClicked('6')"></td>
+    <td id="7" onclick="squareClicked('7')"></td>
+    <td id="8" onclick="squareClicked('8')"></td>
   </tr>
 </table>
+<script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script>
   function findGetParameter(parameterName) {
@@ -65,11 +67,71 @@
           });
       return result;
   }
-  $("#game").text(" Joining game " + findGetParameter("game"));
+  $("#game").text(" Waiting for game " + findGetParameter("game"));
   $("#game").fadeIn();
-  setTimeout(function(){
+  const socket = io()
+  var store = {};
+  var myTurn = false;
+  socket.emit("please-join-game", {game: findGetParameter("game")});
+  socket.on("frikken-error", function(params){
+    console.error(params)
+  })
+  socket.on("game-accepted", function(params){
+    console.log(params)
+    if(params.database.player2 == undefined){
+      store.code = params.database.code;
+      store.me = params.database.player1;
+    } else {
+      store.code = params.database.code;
+      store.me = params.database.player2;
+      store.other = params.database.player1;
+      socket.emit("forward-message", {toID: store.other, event_name: "other-person-id", payload: { id: store.me }})
+    }
+  })
+  function emitTo(id, event_name, payload) {
+    socket.emit("forward-message", {toID: id, event_name: event_name, payload: payload})
+  }
+  socket.on("other-person-id", function(params){
+    console.log(params)
+    store.other = params.id;
+    emitTo(store.other, "player2-display-grid", {});
+  })
+  socket.on("player2-display-grid", function(params){
     $("#game").remove()
-  }, 1000)
+    $("table").fadeIn();
+    $("#turn").fadeIn();
+    $("#turn").text("Opponent's Turn");
+    emitTo(store.other, "player1-display-grid", {})
+  })
+  socket.on("player1-display-grid", function(params){
+    $("#game").remove();
+    $("table").fadeIn();
+    $("#turn").fadeIn();
+    $("#turn").text("Your Turn");
+    myTurn = true;
+  })
+  socket.on("opponent-turn", function(params){
+    if (!myTurn) {
+      if ($("#" + params.myGo).text() != ""){
+        swal("Opponent is most likely using hacks", "they sent an invalid move", "error")
+      }
+      $("#" + params.myGo).text("O");
+      myTurn = true;
+      $("#turn").text("Your Turn");
+    } else {
+      swal("Opponent is most likely using hacks", "they sent an invalid move", "error")
+    }
+  });
+  function squareClicked(square){
+    if (myTurn) {
+      if ($("#" + square).text() != "") return null;
+      $("#" + square).text("X");
+      emitTo(store.other, "opponent-turn", {myGo: square})
+      myTurn = false;
+      $("#turn").text("Opponent's Turn");
+    }
+  }
+
 </script>
 </body>
 </html>
