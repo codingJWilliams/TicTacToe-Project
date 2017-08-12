@@ -92,6 +92,7 @@
            tmp = item.split("=");
            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
          });
+       }
   $("#game").text(" Waiting for game " + findGetParameter("game"));             // Display waiting for game text
   $("#game").fadeIn();                                                          // ^^^
   const socket = io();
