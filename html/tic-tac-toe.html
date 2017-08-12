@@ -82,112 +82,90 @@
     if (squares[2] == "O" && squares[4] == "O" && squares[6] == "O") return "O";
     return false;
   }
-  function findGetParameter(parameterName) {
-      var result = null,
-          tmp = [];
-      location.search
-          .substr(1)
-          .split("&")
-          .forEach(function (item) {
-            tmp = item.split("=");
-            if (tmp[0] === parameterName) result = decodeURIComponent(tmp[1]);
-          });
+  function findGetParameter(parameterName) {                                    // TBH I dont know how this works but stackoverflow does so beat that plaigarism
+      var result = null, tmp = [];
+      location.search.substr(1).split("&").forEach(function (item) { if (item.split("=")[0] === parameterName) result = decodeURIComponent(tmp[1]); });
       return result;
   }
-  $("#game").text(" Waiting for game " + findGetParameter("game"));
-  $("#game").fadeIn();
-  const socket = io()
+  $("#game").text(" Waiting for game " + findGetParameter("game"));             // Display waiting for game text
+  $("#game").fadeIn();                                                          // ^^^
+  const socket = io();
   var store = {};
   var myTurn = false;
-  socket.emit("please-join-game", {game: findGetParameter("game")});
+  socket.emit("please-join-game", {game: findGetParameter("game")});            // Ask nicely to the server if I can pls join the game indicated in mai get request
   socket.on("frikken-error", function(params){
     console.error(params)
   })
   socket.on("game-accepted", function(params){
     console.log(params)
-    if(params.database.player2 == undefined){
+    if(params.database.player2 == undefined){                                   // If I am the host
       store.code = params.database.code;
-      store.me = params.database.player1;
-    } else {
+      store.me = params.database.player1;                                       // Store data given and sit on my bum waiting for game to start
+    } else {                                                                    // If I am the second player
       store.code = params.database.code;
       store.me = params.database.player2;
-      store.other = params.database.player1;
-      socket.emit("forward-message", {toID: store.other, event_name: "other-person-id", payload: { id: store.me }})
+      store.other = params.database.player1;                                    // Store all the data
+      socket.emit("forward-message", {toID: store.other, event_name: "other-person-id", payload: { id: store.me }}) // Send the host my socket ID
     }
   })
   function emitTo(id, event_name, payload) {
     socket.emit("forward-message", {toID: id, event_name: event_name, payload: payload})
   }
-  socket.on("other-person-id", function(params){
-    console.log(params)
-    store.other = params.id;
-    emitTo(store.other, "player2-display-grid", {});
+  socket.on("other-person-id", function(params){                                // HOST: On recieving player2s id,
+    console.log(params)                                                         // Log it
+    store.other = params.id;                                                    // Store it (both now have store = {me: "019823", other: "98765", code: "TTT-111AAA"}, with me as their own code)
+    emitTo(store.other, "player2-display-grid", {});                            // Tell player 2 to display their grid
   })
-  socket.on("player2-display-grid", function(params){
+  socket.on("player2-display-grid", function(params){                           // P2: On recieving instruction to display grid
     $("#game").remove();
     $("table").fadeIn();
     $("#turn_thing").fadeIn();
-    $("#turn_thing").text("Opponent's Turn");
-    emitTo(store.other, "player1-display-grid", {})
+    $("#turn_thing").text("Opponent's Turn");                                   // Magical JQuery to display a grid
+    emitTo(store.other, "player1-display-grid", {})                             // Tell player 1 to display a grid
   })
-  socket.on("player1-display-grid", function(params){
+  socket.on("player1-display-grid", function(params){                           // HOST: When told to display grid
+                                                                                // TODO: Verify that the usual steps have taken process and p2 isnt hacking
     $("#game").remove();
     $("table").fadeIn();
     $("#turn_thing").fadeIn();
-    $("#turn_thing").text("Your Turn");
-    myTurn = true;
+    $("#turn_thing").text("Your Turn");                                         // Magical JQuery to display a grid
+    myTurn = true;                                                              // Set myturn to true; host always starts
   })
-  socket.on("opponent-turn", function(params){
-    if (!myTurn) {
-      if ($("#" + params.myGo).text() != ""){
+  socket.on("opponent-turn", function(params){                                  // EITHER: When the opponent makes their move
+    if (!myTurn) {                                                              // Ensure their client is playing nicely
+      if ($("#" + params.myGo).text() != ""){                                   // Ensure their client is playing nicely
         swal("Opponent is most likely using hacks", "they sent an invalid move", "error")
       }
-      $("#" + params.myGo).text("O");
-      myTurn = true;
-      $("#turn_thing").text("Your Turn");
-      if (winners() !== false){
+      $("#" + params.myGo).text("O");                                           // Set the square that they asked to O
+      myTurn = true;                                                            // Make it my turn
+      $("#turn_thing").text("Your Turn");                                       // Change turn text to Your Turn
+      if (winners() !== false){                                                 // If winner is not false (someone has won)
         var winner = winners();
-        if(winner == "O") {
-          $("table").fadeOut();
-          $("#turn_thing").remove();
-          $("#win").text("You lose :-(!");
-          $("#win").fadeIn();
-          socket.disconnect()
-        } else {
-          $("table").fadeOut();
-          $("#turn_thing").remove();
-          $("#win").text("You win!");
-          $("#win").fadeIn();
-          socket.disconnect()
-        }
+        $("table").fadeOut();                                                   // Delete/Disappear all the game stuff
+        $("#turn_thing").remove();                                              // Delete/Disappear all the game stuff
+        $("#win").text(winner === "X" ? "You win!" : "You lose :-(");           // Set text on screen
+        $("#win").fadeIn();                                                     // Display winner text
+        socket.disconnect()                                                     // Disconnect from server - tab could be in background using up mai resources
       }
-    } else {
+    } else {                                                                    // Ensure their client is playing nicely
       swal("Opponent is most likely using hacks", "they sent an invalid move", "error")
     }
   });
-  function squareClicked(square){
-    if (myTurn) {
-      if ($("#" + square).text() != "") return null;
-      $("#" + square).text("X");
-      emitTo(store.other, "opponent-turn", {myGo: square})
-      if (winners() !== false){
+  function squareClicked(square){                                               // ME: When I click a square
+    if (myTurn) {                                                               // Ensure it's my turn
+      if ($("#" + square).text() != "") return null;                            // If the square is not empty, exit quietly
+      $("#" + square).text("X");                                                // Else, set the square to X
+      emitTo(store.other, "opponent-turn", {myGo: square})                      // Tell opponent (see above) TODO: Confirmations?
+      if (winners() !== false){                                                 // If winner is not false (someone has won)
         var winner = winners();
-        if(winner == "X") {
-          $("#turn_thing").remove();
-          $("table").fadeOut();
-          $("#win").text("You win!");
-          $("#win").fadeIn();
-          socket.disconnect()
-        } else {
-          $("#turn_thing").remove();
-          $("table").fadeOut();
-          $("#win").text("You lose :-(!");
-          $("#win").fadeIn();
-          socket.disconnect()
-        }
+        $("table").fadeOut();                                                   // Delete/Disappear all the game stuff
+        $("#turn_thing").remove();                                              // Delete/Disappear all the game stuff
+        $("#win").text(winner === "X" ? "You win!" : "You lose :-(");           // Set text on screen
+        $("#win").fadeIn();                                                     // Display winner text
+        socket.disconnect()                                                     // Disconnect from server - tab could be in background using up mai resources
       }
-      myTurn = false;
-      $("#turn_thing").text("Opponent's Turn");
+      myTurn = false;                                                           // Set internal turn indicator
+      $("#turn_thing").text("Opponent's Turn");                                 // Set visual turn indicator
     }
   }
 
