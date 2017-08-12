@@ -1,0 +1,22 @@
+{
+  "server":{
+    "port": 80
+  },
+  "file_locations":{
+    "lobby": "/html/lobby.html",
+    "play_friend": "/html/tic-tac-toe.html",
+    "static": "static"
+  },
+  "database":{
+    "uri": "mongodb://Username:Password@address:port/database-for-ttt?authSource=your-users-auth-db(normally-admin)",
+    "collection": "an-already-created-collection-in-'database-for-ttt'-above"
+  },
+  "socket": {
+    "ping":{
+      "timeout": 3000,
+      "COMMENT1 (DELETE ME)": "The ping timeout is how long should we wait before declaring a conn closed? (ms)",
+      "interval": 3000,
+      "COMMENT2 (DELETE ME)": "The interval is how often we ping. If service becomes popular, then maybe increase this :-) (ms)"
+    }
+  }
+}
