@@ -55,15 +55,15 @@
     <td id="8" onclick="squareClicked('8')"></td>
   </tr>
 </table>
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>                             <!--   Download socket.io from static -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>         <!--   Import jQuery -->
 <script>
-  function winners(){
-    var squares = {};
+  function winners(){                                                           // Looks up squares to see if there's a winner
+    var squares = {};                                                           // Returns: "X", "O", false
     for (var i = 0; i < 9; i++){
       squares[i] = $("#" + i.toString()).text()
     }
-    if (squares[0] == "X" && squares[1] == "X" && squares[2] == "X") return "X";
+    if (squares[0] == "X" && squares[1] == "X" && squares[2] == "X") return "X";// TODO: I might fix this? I kinda like it though, looks meaty
     if (squares[3] == "X" && squares[4] == "X" && squares[5] == "X") return "X";
     if (squares[6] == "X" && squares[7] == "X" && squares[8] == "X") return "X";
     if (squares[0] == "X" && squares[3] == "X" && squares[6] == "X") return "X";
