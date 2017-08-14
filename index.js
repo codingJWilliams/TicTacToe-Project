@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var config = require("./config.json");
 var io = require('socket.io')(http, {'pingInterval': config.socket.ping.interval, 'pingTimeout': config.socket.ping.timeout});
 var rn = require('random-number');
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient;                               // Import mongo
 
 app.get('/', function(req, res){ res.sendFile(__dirname + config.file_locations.lobby); }); // Serve up static "join game" page
 app.get("/newgame/", function(req, res){ res.redirect('/play/?game=' + generateGameCode()); }) // On request to /newgame/ make a game code. TODO: Make client side?
